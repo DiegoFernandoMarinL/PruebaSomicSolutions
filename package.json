@@ -1,0 +1,25 @@
+{
+  "name": "pruebasomicsolutions",
+  "version": "1.0.0",
+  "main": "sever.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DiegoFernandoMarinL/PruebaSomicSolutions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DiegoFernandoMarinL/PruebaSomicSolutions/issues"
+  },
+  "homepage": "https://github.com/DiegoFernandoMarinL/PruebaSomicSolutions#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongodb": "^6.13.0"
+  }
+}
