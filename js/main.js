@@ -1,12 +1,15 @@
 let numFact = document.querySelector("#numFact");
 let fechaToday = document.querySelector("#fecha");
 let fechaVenc = document.querySelector("#fechaVenc");
-let selectNitCli = document.querySelector("#opciones");
+let selectNitCli = document.querySelector("#opcionesCli");
 let nom = document.querySelector("#nom")
 let cupo = document.querySelector("#cupo");
 let plazo = document.querySelector("#plazo");
+let selectCodArt = document.querySelector("#opcionesArt");
+let nomArt = document.querySelector("#nomArt");
+let lab = document.querySelector("#lab");
 
-// Numerp de factura
+// Numero de factura
 const fetchNumFact = async () => {
     try {
       const response = await fetch('http://localhost:5000/numFact');
@@ -42,7 +45,7 @@ const fetchNitDoc = async () => {
   };
   fetchNitDoc();
 
-// carga de datos del cliente
+// Carga de datos del cliente
 selectNitCli.addEventListener("change", function(){
     const doc = this.value;
     const fetchcli = async () => {
@@ -61,9 +64,44 @@ selectNitCli.addEventListener("change", function(){
           vencimiento.setDate(vencimiento.getDate() + nitPla);
           const formattedVencimiento = `${vencimiento.getDate().toString().padStart(2, '0')}-${(vencimiento.getMonth() + 1).toString().padStart(2, '0')}-${vencimiento.getFullYear()}`;
           fechaVenc.textContent = formattedVencimiento;
-
         } catch (error) {
-          console.error('Error al obtener el numero de factura', error);
+          console.error('Error al obtener el codigo del articulo', error);
+        }
+      };
+    fetchcli();
+});
+
+// Codigo del articulo
+const fetchCodArt = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/articulo');
+      const data = await response.json(); 
+
+      data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.ArtCod;
+        option.textContent = item.ArtCod;
+        selectCodArt.appendChild(option);
+      });
+    } catch (error) {
+      console.error('Error al obtener los codigos de articulo', error);
+    }
+  };
+  fetchCodArt();
+
+// Carga datos del articulo
+selectCodArt.addEventListener("change", function(){
+    const cod = this.value;
+    const fetchcli = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/articulo/${cod}`);
+          const data = await response.json(); 
+          let artNom = data[0].ArtNom;          
+          let artLab = data[0].ArtLab;
+          nomArt.textContent = artNom;
+          lab.textContent = artLab;
+        } catch (error) {
+          console.error('Error al obtener el codigo del articulo', error);
         }
       };
     fetchcli();
