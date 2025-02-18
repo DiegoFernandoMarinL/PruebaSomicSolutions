@@ -1,0 +1,11 @@
+[{
+  "_id": {
+    "$oid": "67b398d2a275fa369b8458de"
+  },
+  "ArtCod": "123",
+  "ArtCos": 1500,
+  "ArtLab": "Somic",
+  "ArtNom": "Computador",
+  "ArtPve": 3000,
+  "ArtSal": 20000
+}]

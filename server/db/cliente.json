@@ -1,0 +1,12 @@
+[{
+  "_id": {
+    "$oid": "67b397a5a275fa369b8458dc"
+  },
+  "NitCup": 20000,
+  "NitDoc": "1007436730",
+  "NitNom": "Diego Marin",
+  "NitPla": {
+    "$date": "2025-10-01T05:00:00.000Z"
+  },
+  "NitCod": "1"
+}]
