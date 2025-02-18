@@ -8,6 +8,7 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 
+// Api para traer numero de factura 
 app.get('/numFact', async (req, res) => {
   try {
     const db = await connectMongo();
@@ -21,6 +22,7 @@ app.get('/numFact', async (req, res) => {
   }
 });
 
+// Api para traer todos los clientes
 app.get('/cliente', async (req, res) => {
     try {
       const db = await connectMongo();
@@ -34,6 +36,20 @@ app.get('/cliente', async (req, res) => {
     }
   });
 
+// Api para traer cliente por NitDoc
+app.get('/cliente/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+      const db = await connectMongo();
+      const collection = db.collection('cliente');
+      // Conectar a la base de datos
+      const cliente = await collection.find({NitDoc: id}).toArray();  // Obtener todos los documentos
+      res.status(200).json(cliente);
+    } catch (error) {
+      console.error('Error al obtener el cliente:', error);
+      res.status(500).send('Error en el servidor');
+    }
+  });  
   app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
   });
