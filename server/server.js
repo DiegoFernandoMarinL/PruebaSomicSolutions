@@ -21,7 +21,7 @@ app.get('/numFact', async (req, res) => {
   }
 });
 
-app.get('/', async (req, res) => {
+app.get('/cliente', async (req, res) => {
     try {
       const db = await connectMongo();
       const collection = db.collection('cliente');
