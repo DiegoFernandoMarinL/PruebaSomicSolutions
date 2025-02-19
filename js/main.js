@@ -11,6 +11,7 @@ let lab = document.querySelector("#lab");
 let sal = document.querySelector("#sal");
 let selectNat = document.querySelector("#opcionesNat");
 let uni = document.querySelector("#uni");
+let cost = document.querySelector("#cost");
 
 // Numero de factura
 const fetchNumFact = async () => {
@@ -111,6 +112,26 @@ selectCodArt.addEventListener("change", function(){
               let artNom = data[0].ArtNom;          
               let artLab = data[0].ArtLab;
               let artSal = data[0].ArtSal;
+              let artCos = data[0].ArtCos;
+              // Costos
+              selectNat.addEventListener("change", function(){
+                const elemento = cost.querySelector("input, label");
+                if (elemento) {
+                  elemento.remove();
+                }
+                if (selectNat.value == "1"){
+                  const costo = document.createElement("input");
+                  costo.type = "number";
+                  costo.classList.add("custom-label");
+                  cost.appendChild(costo);
+                  costo.value = artCos;
+                }else{
+                  const costo = document.createElement("label");
+                  costo.classList.add("custom-label");
+                  cost.appendChild(costo);
+                  costo.textContent = `$ ${artCos}`;
+                }  
+              });
               nomArt.textContent = artNom;
               lab.textContent = artLab;
               sal.textContent = artSal;
@@ -123,6 +144,7 @@ selectCodArt.addEventListener("change", function(){
         nomArt.textContent = "----";
         lab.textContent = "----";
         sal.textContent = "----";
+        cost.textContent = "----";
     }
 });
 
@@ -142,5 +164,6 @@ selectNat.addEventListener("change", function(){
           uni.value = 0;
         }  
       }
-    });  
+    }); 
 });
+
