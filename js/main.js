@@ -8,6 +8,9 @@ let plazo = document.querySelector("#plazo");
 let selectCodArt = document.querySelector("#opcionesArt");
 let nomArt = document.querySelector("#nomArt");
 let lab = document.querySelector("#lab");
+let sal = document.querySelector("#sal");
+let selectNat = document.querySelector("#opcionesNat");
+let uni = document.querySelector("#uni");
 
 // Numero de factura
 const fetchNumFact = async () => {
@@ -48,27 +51,35 @@ const fetchNitDoc = async () => {
 // Carga de datos del cliente
 selectNitCli.addEventListener("change", function(){
     const doc = this.value;
-    const fetchcli = async () => {
-        try {
-          const response = await fetch(`http://localhost:5000/cliente/${doc}`);
-          const data = await response.json(); 
-          let nitNom = data[0].NitNom;          
-          let nitCup = data[0].NitCup;
-          let nitPla = data[0].NitPla;
-          nom.textContent = nitNom;
-          cupo.textContent = `$ ${nitCup}`;
-          plazo.textContent = nitPla;
-
-          // Fecha vencimiento
-          const vencimiento = new Date(today);
-          vencimiento.setDate(vencimiento.getDate() + nitPla);
-          const formattedVencimiento = `${vencimiento.getDate().toString().padStart(2, '0')}-${(vencimiento.getMonth() + 1).toString().padStart(2, '0')}-${vencimiento.getFullYear()}`;
-          fechaVenc.textContent = formattedVencimiento;
-        } catch (error) {
-          console.error('Error al obtener el codigo del articulo', error);
-        }
-      };
-    fetchcli();
+    if (doc != 0) {
+        const fetchcli = async () => {
+            try {
+              const response = await fetch(`http://localhost:5000/cliente/${doc}`);
+              const data = await response.json(); 
+              let nitNom = data[0].NitNom;          
+              let nitCup = data[0].NitCup;
+              let nitPla = data[0].NitPla;
+              nom.textContent = nitNom;
+              cupo.textContent = `$ ${nitCup}`;
+              plazo.textContent = nitPla;
+    
+              // Fecha vencimiento
+              const vencimiento = new Date(today);
+              vencimiento.setDate(vencimiento.getDate() + nitPla);
+              const formattedVencimiento = `${vencimiento.getDate().toString().padStart(2, '0')}-${(vencimiento.getMonth() + 1).toString().padStart(2, '0')}-${vencimiento.getFullYear()}`;
+              fechaVenc.textContent = formattedVencimiento;
+            } catch (error) {
+              console.error('Error al obtener el codigo del articulo', error);
+            }
+          };
+        fetchcli();
+    }else{
+        nom.textContent = "----";
+        cupo.textContent = "----";
+        plazo.textContent = "----";
+        fechaVenc.textContent = "----";
+    }
+    
 });
 
 // Codigo del articulo
@@ -92,17 +103,44 @@ const fetchCodArt = async () => {
 // Carga datos del articulo
 selectCodArt.addEventListener("change", function(){
     const cod = this.value;
-    const fetchcli = async () => {
-        try {
-          const response = await fetch(`http://localhost:5000/articulo/${cod}`);
-          const data = await response.json(); 
-          let artNom = data[0].ArtNom;          
-          let artLab = data[0].ArtLab;
-          nomArt.textContent = artNom;
-          lab.textContent = artLab;
-        } catch (error) {
-          console.error('Error al obtener el codigo del articulo', error);
-        }
-      };
-    fetchcli();
+    if (cod != "0"){
+        const fetchcli = async () => {
+            try {
+              const response = await fetch(`http://localhost:5000/articulo/${cod}`);
+              const data = await response.json(); 
+              let artNom = data[0].ArtNom;          
+              let artLab = data[0].ArtLab;
+              let artSal = data[0].ArtSal;
+              nomArt.textContent = artNom;
+              lab.textContent = artLab;
+              sal.textContent = artSal;
+            } catch (error) {
+              console.error('Error al obtener el codigo del articulo', error);
+            }
+          };
+        fetchcli();
+    }else{
+        nomArt.textContent = "----";
+        lab.textContent = "----";
+        sal.textContent = "----";
+    }
+});
+
+// Unidades 
+selectNat.addEventListener("change", function(){
+    if (selectNat.value == "2"){
+      if (Number(sal.textContent) < Number(uni.textContent)){
+        alert("La naturaleza es negativa, las unidades no pueden exceder el saldo");
+        uni.value = 0;
+      }  
+    }
+    uni.addEventListener("input", function() {
+      uni.textContent = this.value;
+      if (selectNat.value == "2"){
+        if (Number(sal.textContent) < Number(uni.textContent)){
+          alert("La naturaleza es negativa, las unidades no pueden exceder el saldo");
+          uni.value = 0;
+        }  
+      }
+    });  
 });

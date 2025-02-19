@@ -22,7 +22,9 @@
         </div>
         <div class="form-group-2">
             <label for="nitCliText">Cliente:</label>
-            <select id="opcionesCli"></select>
+            <select id="opcionesCli">
+                <option value="0">Seleccione un cliente</option>
+            </select>
 
             <label for="nomText">Nombre:</label>
             <label id="nom" class="custom-label">----</label>
@@ -41,7 +43,9 @@
         </div>
         <div class="form-group-3">
             <label for="codArtText">Codigo articulo:</label>
-            <select id="opcionesArt"></select>
+            <select id="opcionesArt">
+                <option value="0">Seleccione un articulo</option>
+            </select>
 
             <label for="nomArtText">Nombre articulo:</label>
             <label id="nomArt" class="custom-label">----</label>
@@ -50,13 +54,17 @@
             <label id="lab" class="custom-label">----</label>
 
             <label for="natuText">Naturaleza:</label>
-            <label for="natu">+</label>
+            <select id="opcionesNat">
+                <option value="0">----</option>
+                <option value="1">+</option>
+                <option value="2">-</option>
+            </select>
 
             <label for="salText">Saldo:</label>
-            <label for="sal">$2000</label>
+            <label id="sal" class="custom-label">----</label>
 
             <label for="uniText">Unidades:</label>
-            <label for="uni">10</label>
+            <input id="uni" type="number" class="custom-label">
 
             <label for="costText">Costos:</label>
             <label for="cost">$1000</label>
