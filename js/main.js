@@ -12,6 +12,7 @@ let sal = document.querySelector("#sal");
 let selectNat = document.querySelector("#opcionesNat");
 let uni = document.querySelector("#uni");
 let cost = document.querySelector("#cost");
+let preVenta = document.querySelector("#preVenta");
 
 // Numero de factura
 const fetchNumFact = async () => {
@@ -113,6 +114,7 @@ selectCodArt.addEventListener("change", function(){
               let artLab = data[0].ArtLab;
               let artSal = data[0].ArtSal;
               let artCos = data[0].ArtCos;
+              let artPreV = data[0].ArtPve;
               // Costos
               selectNat.addEventListener("change", function(){
                 const elemento = cost.querySelector("input, label");
@@ -125,11 +127,13 @@ selectCodArt.addEventListener("change", function(){
                   costo.classList.add("custom-label");
                   cost.appendChild(costo);
                   costo.value = artCos;
+                  preVenta.textContent = `----`;
                 }else{
                   const costo = document.createElement("label");
                   costo.classList.add("custom-label");
                   cost.appendChild(costo);
                   costo.textContent = `$ ${artCos}`;
+                  preVenta.textContent = `$ ${artPreV}`;
                 }  
               });
               nomArt.textContent = artNom;
