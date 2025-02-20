@@ -1,3 +1,7 @@
+body{
+    margin: 0px 80px 0px 80px;
+}
+
 h1{
     text-align: center;
 }
@@ -29,3 +33,17 @@ input[type="number"]{
     width: 70px; 
 }
   
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 15px;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f4f4f4;
+}

@@ -16,6 +16,8 @@ let preVenta = document.querySelector("#preVenta");
 let totalVen = document.querySelector("#totalVen");
 let totalCost = document.querySelector("#totalCost");
 let section3 = document.querySelector("#section3");
+let buttonAgre = document.querySelector("#buttonAgre");
+let formMain = document.querySelector("#formMain");
 
 // Numero de factura
 const fetchNumFact = async () => {
@@ -120,17 +122,13 @@ selectCodArt.addEventListener("change", function(){
               let artPreV = data[0].ArtPve;
               // Costos
               selectNat.addEventListener("change", function(){
-                const elemento = cost.querySelector("input, label");
-                if (elemento) {
-                  elemento.remove();
-                }
                 if (selectNat.value == "1"){
                   cost.value = artCos;
                   cost.disabled = false;
                   preVenta.value = 0;
                   preVenta.disabled = true;
                 }else{
-                  cost.textContent = artCos;
+                  cost.value = artCos;
                   cost.disabled = true;
                   preVenta.value = artPreV;
                   preVenta.disabled = false;
@@ -177,3 +175,40 @@ section3.addEventListener("change", function() {
   totalCost.textContent = uni.value * cost.value;
 })
 
+// boton agregar
+formMain.addEventListener('submit', function(event) {
+  let labels = document.querySelectorAll("#formMain label.custom-label");
+  let selects = document.querySelectorAll("#formMain select");
+  let inputs = document.querySelectorAll("#formMain input");
+  let valido = true;
+  inputs.forEach(input => {
+    if (input.value === "") {
+        valido = false;
+    }
+});
+  selects.forEach(select => {
+      if (select.value === "0" || select.value === "----") {
+          valido = false;
+      }
+  });
+  labels.forEach(label => {
+      if (label.textContent.trim() === "----") {
+          valido = false;
+      }
+  });
+
+  if (!valido) {
+      alert("Ningún campo puede tener el valor '----' o vacio. Por favor, complete los datos.");
+      event.preventDefault();
+  }else{
+    if (selectNat.value == "2" && preVenta.value < cost.value) {
+      alert("El precio de venta no puede ser menor al costo");
+      event.preventDefault();
+    } else {
+      alert("Producto agregado exitosamente");
+      // Limpiar campos
+      section3.reset();
+      buttonAgre.disabled = true;
+    }
+  }
+})
