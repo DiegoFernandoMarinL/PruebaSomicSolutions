@@ -34,16 +34,30 @@ input[type="number"]{
 }
   
 table {
-    width: 50%;
+    width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
     font-size: 15px;
 }
+
 th, td {
     border: 1px solid black;
-    padding: 8px;
+    padding: 2px;
     text-align: left;
 }
+
 th {
     background-color: #f4f4f4;
+}
+
+th:nth-child(4), td:nth-child(4), 
+th:nth-child(5), td:nth-child(5) { 
+    width: 5%;
+}
+
+th:nth-child(6), td:nth-child(6), 
+th:nth-child(7), td:nth-child(7),
+th:nth-child(8), td:nth-child(8),
+th:nth-child(9), td:nth-child(9) { 
+    text-align: right;
 }

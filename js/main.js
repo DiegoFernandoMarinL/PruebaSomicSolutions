@@ -182,10 +182,10 @@ formMain.addEventListener('submit', function(event) {
   let inputs = document.querySelectorAll("#formMain input");
   let valido = true;
   inputs.forEach(input => {
-    if (input.value === "") {
-        valido = false;
-    }
-});
+      if (input.value === "") {
+          valido = false;
+      }
+  });
   selects.forEach(select => {
       if (select.value === "0" || select.value === "----") {
           valido = false;
@@ -206,9 +206,52 @@ formMain.addEventListener('submit', function(event) {
       event.preventDefault();
     } else {
       alert("Producto agregado exitosamente");
-      // Limpiar campos
-      section3.reset();
-      buttonAgre.disabled = true;
+      const dataAgre = [
+        {
+          "NitCli": selectNitCli.value,
+          "ArtCod": selectCodArt.value,
+          "ArtNom": nomArt.textContent,
+          "NatCod": selectNat.value,
+          "Uni": uni.value,
+          "PreVen": preVenta.value,
+          "Cost": cost.value,
+          "TotalVen": totalVen.textContent,
+          "TotalCos": totalCost.textContent
+        }
+      ]
+      llenarTabla(dataAgre)
+      event.preventDefault();
+      // Resetear formulario
+      document.getElementById("opcionesArt").value = "0";
+      document.getElementById("nomArt").textContent = "----";
+      document.getElementById("lab").textContent = "----";
+      document.getElementById("opcionesNat").value = "0";
+      document.getElementById("sal").textContent = "----";
+      document.getElementById("uni").value = "";
+      document.getElementById("cost").value = "";
+      document.getElementById("preVenta").value = "";
+      document.getElementById("totalVen").textContent = "----";
+      document.getElementById("totalCost").textContent = "----";
     }
   }
 })
+
+// tabla
+function llenarTabla(dataAgre) {
+  const tbody = document.querySelector("#Tabla tbody");
+  dataAgre.forEach(item => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+          <td>${item.NitCli}</td>
+          <td>${item.ArtCod}</td>
+          <td>${item.ArtNom}</td>
+          <td>${item.NatCod}</td>
+          <td>${item.Uni}</td>
+          <td>${item.PreVen}</td>
+          <td>${item.Cost}</td>
+          <td>${item.TotalVen}</td>
+          <td>${item.TotalCos}</td>
+      `;
+      tbody.appendChild(row);
+  });
+}
