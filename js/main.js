@@ -13,6 +13,9 @@ let selectNat = document.querySelector("#opcionesNat");
 let uni = document.querySelector("#uni");
 let cost = document.querySelector("#cost");
 let preVenta = document.querySelector("#preVenta");
+let totalVen = document.querySelector("#totalVen");
+let totalCost = document.querySelector("#totalCost");
+let section3 = document.querySelector("#section3");
 
 // Numero de factura
 const fetchNumFact = async () => {
@@ -62,7 +65,7 @@ selectNitCli.addEventListener("change", function(){
               let nitCup = data[0].NitCup;
               let nitPla = data[0].NitPla;
               nom.textContent = nitNom;
-              cupo.textContent = `$ ${nitCup}`;
+              cupo.textContent = nitCup;
               plazo.textContent = nitPla;
     
               // Fecha vencimiento
@@ -122,18 +125,15 @@ selectCodArt.addEventListener("change", function(){
                   elemento.remove();
                 }
                 if (selectNat.value == "1"){
-                  const costo = document.createElement("input");
-                  costo.type = "number";
-                  costo.classList.add("custom-label");
-                  cost.appendChild(costo);
-                  costo.value = artCos;
-                  preVenta.textContent = `----`;
+                  cost.value = artCos;
+                  cost.disabled = false;
+                  preVenta.value = 0;
+                  preVenta.disabled = true;
                 }else{
-                  const costo = document.createElement("label");
-                  costo.classList.add("custom-label");
-                  cost.appendChild(costo);
-                  costo.textContent = `$ ${artCos}`;
-                  preVenta.textContent = `$ ${artPreV}`;
+                  cost.textContent = artCos;
+                  cost.disabled = true;
+                  preVenta.value = artPreV;
+                  preVenta.disabled = false;
                 }  
               });
               nomArt.textContent = artNom;
@@ -158,7 +158,7 @@ selectNat.addEventListener("change", function(){
       if (Number(sal.textContent) < Number(uni.textContent)){
         alert("La naturaleza es negativa, las unidades no pueden exceder el saldo");
         uni.value = 0;
-      }  
+      } 
     }
     uni.addEventListener("input", function() {
       uni.textContent = this.value;
@@ -168,6 +168,12 @@ selectNat.addEventListener("change", function(){
           uni.value = 0;
         }  
       }
-    }); 
+    });
 });
+
+// total venta y total costos
+section3.addEventListener("change", function() {
+  totalVen.textContent = uni.value * preVenta.value;
+  totalCost.textContent = uni.value * cost.value;
+})
 
