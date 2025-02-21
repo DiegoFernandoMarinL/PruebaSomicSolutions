@@ -78,7 +78,23 @@ app.get('/articulo/:id', async (req, res) => {
     console.error('Error al obtener el articulo:', error);
     res.status(500).send('Error en el servidor');
   }
-});    
+}); 
+
+// Api para insertar nueva factura
+app.post('/factura', async (req, res) => {
+  const nuevaFactura = req.body
+  console.log(nuevaFactura)
+  try {
+    const db = await connectMongo();
+    const collection = db.collection('factura');
+      // Conectar a la base de datos
+    const facturas = await collection.insertOne(nuevaFactura);
+    res.status(200).json(facturas);
+  } catch (error) {
+    console.error('Error al insertar factura:', error);
+    res.status(500).send('Error en el servidor');
+  }
+})
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
   });

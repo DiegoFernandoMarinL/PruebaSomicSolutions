@@ -18,6 +18,7 @@ let totalCost = document.querySelector("#totalCost");
 let section3 = document.querySelector("#section3");
 let buttonAgre = document.querySelector("#buttonAgre");
 let formMain = document.querySelector("#formMain");
+let buttonSave = document.querySelector("#buttonSave");
 
 // Numero de factura
 const fetchNumFact = async () => {
@@ -176,6 +177,7 @@ section3.addEventListener("change", function() {
 })
 
 // boton agregar
+let dataAgre = [];
 formMain.addEventListener('submit', function(event) {
   let labels = document.querySelectorAll("#formMain label.custom-label");
   let selects = document.querySelectorAll("#formMain select");
@@ -205,9 +207,9 @@ formMain.addEventListener('submit', function(event) {
       alert("El precio de venta no puede ser menor al costo");
       event.preventDefault();
     } else {
-      alert("Producto agregado exitosamente");
-      const dataAgre = [
+      let newObj =
         {
+          "Numfactura": numFact.textContent,
           "NitCli": selectNitCli.value,
           "ArtCod": selectCodArt.value,
           "ArtNom": nomArt.textContent,
@@ -218,8 +220,9 @@ formMain.addEventListener('submit', function(event) {
           "TotalVen": totalVen.textContent,
           "TotalCos": totalCost.textContent
         }
-      ]
-      llenarTabla(dataAgre)
+      dataAgre.push(newObj);
+      llenarTabla(dataAgre);
+      alert("Producto agregado exitosamente");
       event.preventDefault();
       // Resetear formulario
       document.getElementById("opcionesArt").value = "0";
@@ -239,6 +242,7 @@ formMain.addEventListener('submit', function(event) {
 // tabla
 function llenarTabla(dataAgre) {
   const tbody = document.querySelector("#Tabla tbody");
+  tbody.innerHTML = "";
   dataAgre.forEach(item => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -255,3 +259,26 @@ function llenarTabla(dataAgre) {
       tbody.appendChild(row);
   });
 }
+
+buttonSave.addEventListener('click', function() {
+
+  const fetchSave = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/factura', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataAgre)
+      });
+      console.log(dataAgre)
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status}`);
+      }     
+      alert("Factura guardada exitosamente");
+    } catch (error) {
+      console.error('Error al guardar la factura', error);
+    }
+  };
+  fetchSave();
+})
