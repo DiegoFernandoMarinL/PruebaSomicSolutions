@@ -190,13 +190,8 @@ section3.addEventListener("change", function() {
   totalCost.textContent = uni.value * cost.value;
 })
 
-// boton agregar
-formMain.addEventListener('submit', function(event) {
-  event.preventDefault();
-  let labels = document.querySelectorAll("#formMain label.custom-label");
-  let selects = document.querySelectorAll("#formMain select");
-  let inputs = document.querySelectorAll("#formMain input");
-  let valido = true;
+// validacion de campos 
+function validateFields(labels, selects, inputs, valido){
   inputs.forEach(input => {
       if (input.value === "") {
           valido = false;
@@ -212,8 +207,17 @@ formMain.addEventListener('submit', function(event) {
           valido = false;
       }
   });
-
-  if (!valido) {
+  return valido;
+}
+// boton agregar
+formMain.addEventListener('submit', function(event) {
+  event.preventDefault();
+  let labels = document.querySelectorAll("#formMain label.custom-label");
+  let selects = document.querySelectorAll("#formMain select");
+  let inputs = document.querySelectorAll("#formMain input");
+  let valido = true;
+  
+  if (!validateFields(labels, selects, inputs, valido)) {
       alert("Ningún campo puede tener el valor '----' o vacio. Por favor, complete los datos.");
       event.preventDefault();
   }else{
@@ -272,29 +276,37 @@ function llenarTabla(detalles) {
 }
 
 // guardar factura
-buttonSave.addEventListener('click', function() {
-
-  const fetchSave = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/factura', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataAgre[0])
-      });
-      if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.status}`);
+buttonSave.addEventListener('click', function(event) {
+  let labels = document.querySelectorAll("#formMain label.custom-label");
+  let selects = document.querySelectorAll("#formMain select");
+  let inputs = document.querySelectorAll("#formMain input");
+  let valido = true;
+  if (!validateFields(labels, selects, inputs, valido)) {
+    alert("Ningún campo puede tener el valor '----' o vacio. Por favor, complete los datos.");
+    event.preventDefault();
+  }else{
+    const fetchSave = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/factura', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dataAgre[0])
+        });
+        if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        dataAgre = [];
+        document.getElementById("formMain").reset();
+        alert("Factura guardada exitosamente");    
+        location.reload();
+      } catch (error) {
+        console.error('Error al guardar la factura', error);
       }
-      const data = await response.json();
-      console.log(data);
-      dataAgre = [];
-      document.getElementById("formMain").reset();
-      alert("Factura guardada exitosamente");    
-      location.reload();
-    } catch (error) {
-      console.error('Error al guardar la factura', error);
-    }
-  };
-  fetchSave();
+    };
+    fetchSave();
+  } 
 })
