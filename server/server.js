@@ -14,7 +14,7 @@ app.get('/numFact', async (req, res) => {
     const db = await connectMongo();
     const collection = db.collection('factura');
     // Conectar a la base de datos
-    const factura = await collection.find().sort({ numFact: -1 }).limit(1).toArray();  
+    const factura = await collection.find().sort({ NumFact: -1 }).limit(1).toArray();  
     res.status(200).json(factura);
   } catch (error) {
     console.error('Error al obtener usuarios:', error);

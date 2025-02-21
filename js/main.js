@@ -25,7 +25,8 @@ const fetchNumFact = async () => {
     try {
       const response = await fetch('http://localhost:5000/numFact');
       const data = await response.json(); 
-      let numberFact = data[0].numFact+1;           
+      let numberFact = 1;
+      if (data.length != 0) numberFact = data[0].NumFact+1;           
       numFact.textContent = numberFact;
     } catch (error) {
       console.error('Error al obtener el numero de factura', error);
@@ -57,6 +58,7 @@ const fetchNitDoc = async () => {
   fetchNitDoc();
 
 // Carga de datos del cliente
+let dataAgre = [];
 selectNitCli.addEventListener("change", function(){
     const doc = this.value;
     if (doc != 0) {
@@ -76,8 +78,18 @@ selectNitCli.addEventListener("change", function(){
               vencimiento.setDate(vencimiento.getDate() + nitPla);
               const formattedVencimiento = `${vencimiento.getDate().toString().padStart(2, '0')}-${(vencimiento.getMonth() + 1).toString().padStart(2, '0')}-${vencimiento.getFullYear()}`;
               fechaVenc.textContent = formattedVencimiento;
+
+              dataAgre = [
+                {
+                  "NumFact": Number(numFact.textContent),
+                  "FechaFac": fechaToday.textContent,
+                  "FechaVenc": fechaVenc.textContent,
+                  "NitCli": selectNitCli.value,
+                  "Detalle":[]
+                }
+              ];
             } catch (error) {
-              console.error('Error al obtener el codigo del articulo', error);
+              console.error('Error al obtener el codigo del cliente', error);
             }
           };
         fetchcli();
@@ -86,6 +98,8 @@ selectNitCli.addEventListener("change", function(){
         cupo.textContent = "----";
         plazo.textContent = "----";
         fechaVenc.textContent = "----";
+
+        dataAgre = [];
     }
     
 });
@@ -177,8 +191,8 @@ section3.addEventListener("change", function() {
 })
 
 // boton agregar
-let dataAgre = [];
 formMain.addEventListener('submit', function(event) {
+  event.preventDefault();
   let labels = document.querySelectorAll("#formMain label.custom-label");
   let selects = document.querySelectorAll("#formMain select");
   let inputs = document.querySelectorAll("#formMain input");
@@ -209,8 +223,6 @@ formMain.addEventListener('submit', function(event) {
     } else {
       let newObj =
         {
-          "Numfactura": numFact.textContent,
-          "NitCli": selectNitCli.value,
           "ArtCod": selectCodArt.value,
           "ArtNom": nomArt.textContent,
           "NatCod": selectNat.value,
@@ -220,10 +232,9 @@ formMain.addEventListener('submit', function(event) {
           "TotalVen": totalVen.textContent,
           "TotalCos": totalCost.textContent
         }
-      dataAgre.push(newObj);
-      llenarTabla(dataAgre);
+      dataAgre[0].Detalle.push(newObj);
+      llenarTabla(dataAgre[0].Detalle);
       alert("Producto agregado exitosamente");
-      event.preventDefault();
       // Resetear formulario
       document.getElementById("opcionesArt").value = "0";
       document.getElementById("nomArt").textContent = "----";
@@ -235,18 +246,18 @@ formMain.addEventListener('submit', function(event) {
       document.getElementById("preVenta").value = "";
       document.getElementById("totalVen").textContent = "----";
       document.getElementById("totalCost").textContent = "----";
+      console.log(dataAgre);
     }
   }
 })
 
 // tabla
-function llenarTabla(dataAgre) {
+function llenarTabla(detalles) {
   const tbody = document.querySelector("#Tabla tbody");
   tbody.innerHTML = "";
-  dataAgre.forEach(item => {
+  detalles.forEach(item => {
       const row = document.createElement("tr");
       row.innerHTML = `
-          <td>${item.NitCli}</td>
           <td>${item.ArtCod}</td>
           <td>${item.ArtNom}</td>
           <td>${item.NatCod}</td>
@@ -260,6 +271,7 @@ function llenarTabla(dataAgre) {
   });
 }
 
+// guardar factura
 buttonSave.addEventListener('click', function() {
 
   const fetchSave = async () => {
@@ -269,13 +281,17 @@ buttonSave.addEventListener('click', function() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(dataAgre)
+        body: JSON.stringify(dataAgre[0])
       });
-      console.log(dataAgre)
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.status}`);
-      }     
-      alert("Factura guardada exitosamente");
+      }
+      const data = await response.json();
+      console.log(data);
+      dataAgre = [];
+      document.getElementById("formMain").reset();
+      alert("Factura guardada exitosamente");    
+      location.reload();
     } catch (error) {
       console.error('Error al guardar la factura', error);
     }
