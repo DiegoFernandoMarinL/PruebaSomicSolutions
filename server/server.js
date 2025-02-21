@@ -50,6 +50,25 @@ app.get('/cliente/:id', async (req, res) => {
       res.status(500).send('Error en el servidor');
     }
   }); 
+
+//Api para actualizar la cartera del cliente
+app.put('/cliente', async (req, res) => {
+  const id = req.body.NitDoc;
+  const cartera = req.body.NitCar;
+  try {
+    const db = await connectMongo();
+    const collection = db.collection('cliente');
+    // Conectar a la base de datos
+    const cliente = await collection.updateOne(
+      { NitDoc: id },
+      { $inc: { NitCar: cartera } }
+    );
+    res.status(200).json(cliente);
+  } catch (error) {
+    console.error('Error al obtener el cliente:', error);
+    res.status(500).send('Error en el servidor');
+  }
+});
   
 //Api para traer todos los articulos
 app.get('/articulo', async (req, res) => {

@@ -5,6 +5,8 @@ let selectNitCli = document.querySelector("#opcionesCli");
 let nom = document.querySelector("#nom")
 let cupo = document.querySelector("#cupo");
 let plazo = document.querySelector("#plazo");
+let cart = document.querySelector("#cart");
+let disp = document.querySelector("#disp");
 let selectCodArt = document.querySelector("#opcionesArt");
 let nomArt = document.querySelector("#nomArt");
 let lab = document.querySelector("#lab");
@@ -71,10 +73,14 @@ selectNitCli.addEventListener("change", function(){
               let nitNom = data[0].NitNom;          
               let nitCup = data[0].NitCup;
               let nitPla = data[0].NitPla;
+              let nitCar = data[0].NitCar;
               nom.textContent = nitNom;
               cupo.textContent = nitCup;
               plazo.textContent = nitPla;
-    
+              cart.textContent = nitCar;
+              
+              // disponible
+              disp.textContent = nitCup - nitCar;
               // Fecha vencimiento
               const vencimiento = new Date(today);
               vencimiento.setDate(vencimiento.getDate() + nitPla);
@@ -252,7 +258,6 @@ formMain.addEventListener('submit', function(event) {
       document.getElementById("preVenta").value = "";
       document.getElementById("totalVen").textContent = "----";
       document.getElementById("totalCost").textContent = "----";
-      console.log(dataAgre);
     }
   }
 })
@@ -295,8 +300,14 @@ function actualizarTotales() {
 // guardar factura
 buttonSave.addEventListener('click', function(event) {
   const tbody = document.querySelector("#Tabla tbody");
+  const tfoot = document.querySelector("#Tabla tfoot");
   if (tbody.children.length === 0) {
     alert("La factura no tiene ningun articulo asignado");
+    event.preventDefault();
+  }else if (totalesVenta.textContent > disp.textContent) {
+    alert("El cupo del cliente es insuficiente para realizar la factura");
+    tbody.innerHTML = "";
+    tfoot.innerHTML = "";
     event.preventDefault();
   }else{
     const fetchSave = async () => {
@@ -311,6 +322,19 @@ buttonSave.addEventListener('click', function(event) {
         if (!response.ok) {
           throw new Error(`Error en la solicitud: ${response.status}`);
         }
+        const fetchCarteraCli = async () => {
+          const response = await fetch('http://localhost:5000/cliente', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              "NitDoc": selectNitCli.value,
+              "NitCar": Number(totalesVenta.textContent)
+            })
+          });
+        }
+        fetchCarteraCli();
         const data = await response.json();
         console.log(data);
         dataAgre = [];
@@ -322,5 +346,5 @@ buttonSave.addEventListener('click', function(event) {
       }
     };
     fetchSave();
-  } 
+  }
 })
