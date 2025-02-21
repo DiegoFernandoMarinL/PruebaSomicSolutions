@@ -19,6 +19,8 @@ let section3 = document.querySelector("#section3");
 let buttonAgre = document.querySelector("#buttonAgre");
 let formMain = document.querySelector("#formMain");
 let buttonSave = document.querySelector("#buttonSave");
+let totalesVenta = document.querySelector("#totalesVenta");
+let totalesCosto = document.querySelector("#totalesCosto");
 
 // Numero de factura
 const fetchNumFact = async () => {
@@ -273,16 +275,28 @@ function llenarTabla(detalles) {
       `;
       tbody.appendChild(row);
   });
+  actualizarTotales();
+}
+
+// Actualiza valor Totales
+function actualizarTotales() {
+  let totalVenta = 0;
+  let totalCosto = 0;
+
+  document.querySelectorAll("#Tabla tbody tr").forEach(row => {
+      totalVenta += parseFloat(row.cells[6].textContent) || 0;
+      totalCosto += parseFloat(row.cells[7].textContent) || 0;
+  });
+
+  totalesVenta.textContent = totalVenta;
+  totalesCosto.textContent = totalCosto;
 }
 
 // guardar factura
 buttonSave.addEventListener('click', function(event) {
-  let labels = document.querySelectorAll("#formMain label.custom-label");
-  let selects = document.querySelectorAll("#formMain select");
-  let inputs = document.querySelectorAll("#formMain input");
-  let valido = true;
-  if (!validateFields(labels, selects, inputs, valido)) {
-    alert("Ningún campo puede tener el valor '----' o vacio. Por favor, complete los datos.");
+  const tbody = document.querySelector("#Tabla tbody");
+  if (tbody.children.length === 0) {
+    alert("La factura no tiene ningun articulo asignado");
     event.preventDefault();
   }else{
     const fetchSave = async () => {
